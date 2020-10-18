@@ -51,6 +51,7 @@ idt_init(void) {
      {
          SETGATE(idt[i], 0, GD_KTEXT, __vectors[i] & 0xffffffff, 0)
      }
+     SETGATE(idt[T_SYSCALL], 0, GD_KTEXT, __vectors[T_SYSCALL] & 0xffffffff, 3)
      lidt(&idt_pd);
 }
 
