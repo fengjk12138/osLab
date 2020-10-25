@@ -11,6 +11,30 @@
 
 #define TICK_NUM 100
 
+
+
+//challange 2
+static void switch_to_user(void) {
+    asm volatile (
+    "sub $0x8, %%esp;"
+    //"int %0;"
+    "movl %%ebp, %%esp"
+    :
+    : "i"(T_SWITCH_TOU)
+    );
+}
+
+static void switch_to_kernel(void) {
+    asm volatile (
+    "int %0;"
+    "movl %%ebp, %%esp"
+    :
+    : "i"(T_SWITCH_TOK)
+    );
+}
+
+
+
 static void print_ticks() {
     cprintf("%d ticks\n",TICK_NUM);
 #ifdef DEBUG_GRADE
@@ -172,6 +196,16 @@ trap_dispatch(struct trapframe *tf) {
         break;
     case IRQ_OFFSET + IRQ_KBD:
         c = cons_getc();
+        //challenge 2
+        if (c=='3'){
+        	switch_to_user();
+        	print_trapframe(tf);
+        	
+        }
+        else if(c=='0'){
+        	switch_to_kernel();
+        	print_trapframe(tf);
+        }
         cprintf("kbd [%03d] %c\n", c, c);
         break;
     //LAB1 CHALLENGE 1 : YOUR CODE you should modify below codes.
@@ -222,4 +256,6 @@ trap(struct trapframe *tf) {
     // dispatch based on what type of trap occurred
     trap_dispatch(tf);
 }
+
+
 
