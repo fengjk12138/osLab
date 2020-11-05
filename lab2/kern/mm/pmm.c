@@ -409,6 +409,14 @@ page_remove_pte(pde_t *pgdir, uintptr_t la, pte_t *ptep) {
      * DEFINEs:
      *   PTE_P           0x001                   // page table/directory entry flags bit : Present
      */
+    if(!(*ptep & PTE_P))
+    {
+        Page *page = pte2page(*ptep);
+        if(page_ref_dec(page) == 0)
+            free_page(page);
+        *ptep = 0;
+        tlb_invalidate(pgdir, la);
+    }
 #if 0
     if (0) {                      //(1) check if this page table entry is present
         struct Page *page = NULL; //(2) find corresponding page to pte
