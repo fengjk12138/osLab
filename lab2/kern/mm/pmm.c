@@ -347,6 +347,20 @@ get_pte(pde_t *pgdir, uintptr_t la, bool create) {
      *   PTE_W           0x002                   // page table/directory entry flags bit : Writeable
      *   PTE_U           0x004                   // page table/directory entry flags bit : User can access
      */
+    pde_t *pdep = PDX(la) + pgdir;
+    if(!(*pdep & PTE_P))
+    {
+        if(create)
+        {
+            struct Page *pt = alloc_page();
+            set_page_ref(pt, 1);
+            memset(pt, 0, sizeof(Page));
+            uintptr_t kva = KADDR(page2pa(*pt));
+            *pdep = kva | PTE_P | PTE_W | PTE_U;
+        }
+        else return NULL;
+    }
+    return (pte_t *)(KADDR(PDE_ADDR(*pdep))) + PTX(la);
 #if 0
     pde_t *pdep = NULL;   // (1) find page directory entry
     if (0) {              // (2) check if entry is not present
