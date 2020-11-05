@@ -354,9 +354,9 @@ get_pte(pde_t *pgdir, uintptr_t la, bool create) {
         {
             struct Page *pt = alloc_page();
             set_page_ref(pt, 1);
-            memset(pt, 0, sizeof(Page));
-            uintptr_t kva = KADDR(page2pa(*pt));
-            *pdep = kva | PTE_P | PTE_W | PTE_U;
+            uintptr_t kva = KADDR(page2pa(pt));
+            memset(kva, 0, PGSIZE);
+            *pdep = page2pa(pt) | PTE_P | PTE_W | PTE_U;
         }
         else return NULL;
     }
@@ -409,9 +409,9 @@ page_remove_pte(pde_t *pgdir, uintptr_t la, pte_t *ptep) {
      * DEFINEs:
      *   PTE_P           0x001                   // page table/directory entry flags bit : Present
      */
-    if(!(*ptep & PTE_P))
+    if(*ptep & PTE_P)
     {
-        Page *page = pte2page(*ptep);
+        struct Page *page = pte2page(*ptep);
         if(page_ref_dec(page) == 0)
             free_page(page);
         *ptep = 0;
