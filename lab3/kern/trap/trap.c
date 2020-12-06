@@ -170,6 +170,8 @@ pgfault_handler(struct trapframe *tf) {
 static volatile int in_swap_tick_event = 0;
 extern struct mm_struct *check_mm_struct;
 
+int int_ticks = 0;
+
 static void
 trap_dispatch(struct trapframe *tf) {
     char c;
