@@ -54,9 +54,9 @@ _fifo_map_swappable(struct mm_struct *mm, uintptr_t addr, struct Page *page, int
 
     list_add(head, entry);
 
-    struct Page *tmp_page = le2page(entry, pra_list_head);
+    //extended clock
     pte_t *pte = get_pte(mm->pgdir, addr, 0);
-    *pte = *pte & (~PTE_D);
+    *pte = (*pte & (~PTE_D));
     return 0;
 }
 
@@ -74,16 +74,19 @@ _fifo_swap_out_victim(struct mm_struct *mm, struct Page **ptr_page, int in_tick)
     //(1)  unlink the  earliest arrival page in front of pra_list_head qeueue
     //(2)  assign the value of *ptr_page to the addr of this page
 
-//    list_del(head);
+//    list_entry_t *le=head->prev;
+//    list_del(le);
 //    struct Page *tmp_ptr = le2page(head, pra_page_link);;
 //    *ptr_page = tmp_ptr;
 
-//    list_entry_t *le =head;
-//    list_del(le);
-//    *ptr_page =
+
+    //extended clock
+    list_entry_t *le =head;
 
     while (1) {
-        list_entry_t *le = le->prev;
+        le = le->prev;
+        if(le==head)
+            le=le->prev;
         struct Page *tmp = le2page(le, pra_page_link);
         pte_t *pte = get_pte(mm->pgdir, tmp->pra_vaddr, 0);
         if (((*pte) & (PTE_D)) == 0) {
@@ -91,8 +94,8 @@ _fifo_swap_out_victim(struct mm_struct *mm, struct Page **ptr_page, int in_tick)
             list_del(le);
             break;
         } else {
-            *pte = *pte & (~PTE_D);
-        }d
+            *pte = ((*pte) & (~PTE_D));
+        }
     }
     return 0;
 }
