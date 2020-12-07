@@ -88,11 +88,11 @@ _fifo_swap_out_victim(struct mm_struct *mm, struct Page **ptr_page, int in_tick)
         pte_t *pte = get_pte(mm->pgdir, tmp->pra_vaddr, 0);
         if (((*pte) & (PTE_D)) == 0) {
             *ptr_page = tmp;
-            list_del(le2);
+            list_del(le);
             break;
         } else {
             *pte = *pte & (~PTE_D);
-        }
+        }d
     }
     return 0;
 }
