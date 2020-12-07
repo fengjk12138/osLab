@@ -370,8 +370,15 @@ do_pgfault(struct mm_struct *mm, uint32_t error_code, uintptr_t addr) {
     pde_t *pgdir = get_pte(mm->pgdir, addr, 1);
     if (pgdir == NULL)//not find pte and not creat
         goto failed;
-    struct Page *pte_page = pgdir_alloc_page(mm->pgdir, addr, perm);
-
+    if(*pgdir==0){
+        struct Page *pte_page = pgdir_alloc_page(mm->pgdir, addr, perm);
+    }else{
+        struct Page *page;
+        swap_in(mm, addr, &page);
+        page_insert(mm->pgdir, page, addr, perm);
+        swap_map_swappable(mm, addr, page, 1);
+        page->pra_vaddr = addr;
+    }
     tlb_invalidate(mm->pgdir, addr);
 #if 0
     /*LAB3 EXERCISE 1: YOUR CODE*/
