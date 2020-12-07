@@ -70,17 +70,14 @@ _fifo_swap_out_victim(struct mm_struct *mm, struct Page **ptr_page, int in_tick)
     /*LAB3 EXERCISE 2: YOUR CODE*/
     //(1)  unlink the  earliest arrival page in front of pra_list_head qeueue
     //(2)  assign the value of *ptr_page to the addr of this page
+
 //    list_del(head);
 //    struct Page *tmp_ptr = le2page(head, pra_page_link);;
 //    *ptr_page = tmp_ptr;
 
     list_entry_t *le = head->prev;
-    assert(head!=le);
-    struct Page *p = le2page(le, pra_page_link);
     list_del(le);
-    assert(p !=NULL);
-    *ptr_page = p;
-
+    *ptr_page = le2page(le, pra_page_link);
     return 0;
 }
 
