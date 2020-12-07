@@ -371,8 +371,9 @@ do_pgfault(struct mm_struct *mm, uint32_t error_code, uintptr_t addr) {
     if (pgdir == NULL)//not find pte and not creat
         goto failed;
     if(*pgdir==0){
-        struct Page *pte_page = pgdir_alloc_page(mm->pgdir, addr, perm);
-    }else{
+    struct Page *pte_page = pgdir_alloc_page(mm->pgdir, addr, perm);
+    }
+    else{
         struct Page *page;
         swap_in(mm, addr, &page);
         page_insert(mm->pgdir, page, addr, perm);
