@@ -380,7 +380,6 @@ do_pgfault(struct mm_struct *mm, uint32_t error_code, uintptr_t addr) {
         swap_map_swappable(mm, addr, page, 1);
         page->pra_vaddr = addr;
     }
-    tlb_invalidate(mm->pgdir, addr);
 #if 0
     /*LAB3 EXERCISE 1: YOUR CODE*/
     ptep = ???              //(1) try to find a pte, if pte's PT(Page Table) isn't existed, then create a PT.
