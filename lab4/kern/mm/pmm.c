@@ -647,7 +647,6 @@ get_pgtable_items(size_t left, size_t right, size_t start, uintptr_t *table, siz
     }
     return 0;
 }
-
 //print_pgdir - print the PDT&PT
 void
 print_pgdir(void) {
@@ -663,26 +662,4 @@ print_pgdir(void) {
         }
     }
     cprintf("--------------------- END ---------------------\n");
-}
-
-void *
-kmalloc(size_t n) {
-    void * ptr=NULL;
-    struct Page *base=NULL;
-    assert(n > 0 && n < 1024*0124);
-    int num_pages=(n+PGSIZE-1)/PGSIZE;
-    base = alloc_pages(num_pages);
-    assert(base != NULL);
-    ptr=page2kva(base);
-    return ptr;
-}
-
-void 
-kfree(void *ptr, size_t n) {
-    assert(n > 0 && n < 1024*0124);
-    assert(ptr != NULL);
-    struct Page *base=NULL;
-    int num_pages=(n+PGSIZE-1)/PGSIZE;
-    base = kva2page(ptr);
-    free_pages(base, num_pages);
 }

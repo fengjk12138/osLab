@@ -13,7 +13,6 @@
  * "Data Structure -- C programming language".
 */
 // LAB2 EXERCISE 1: YOUR CODE
-
 // you should rewrite functions: `default_init`, `default_init_memmap`,
 // `default_alloc_pages`, `default_free_pages`.
 /*
@@ -142,6 +141,7 @@ default_alloc_pages(size_t n) {
             p->property = page->property - n;
             list_add(&free_list, &(p->page_link));
     }
+        list_del(&(page->page_link));//mychange
         nr_free -= n;
         ClearPageProperty(page);
     }
