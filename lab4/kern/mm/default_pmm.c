@@ -13,6 +13,7 @@
  * "Data Structure -- C programming language".
 */
 // LAB2 EXERCISE 1: YOUR CODE
+
 // you should rewrite functions: `default_init`, `default_init_memmap`,
 // `default_alloc_pages`, `default_free_pages`.
 /*
@@ -159,8 +160,11 @@ default_free_pages(struct Page *base, size_t n) {
     base->property = n;
     SetPageProperty(base);
     list_entry_t *le = list_next(&free_list);
+    list_entry_t *sit = &free_list;
     while (le != &free_list) {
         p = le2page(le, page_link);
+        if(p + p->property < base)
+            sit = le;
         le = list_next(le);
         if (base + base->property == p) {
             base->property += p->property;
@@ -292,6 +296,7 @@ default_check(void) {
 
     le = &free_list;
     while ((le = list_next(le)) != &free_list) {
+        assert(le->next->prev == le && le->prev->next == le);
         struct Page *p = le2page(le, page_link);
         count --, total -= p->property;
     }

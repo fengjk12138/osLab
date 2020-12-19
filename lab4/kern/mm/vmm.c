@@ -36,7 +36,9 @@
 */
 
 static void check_vmm(void);
+
 static void check_vma_struct(void);
+
 static void check_pgfault(void);
 
 // mm_create -  alloc a mm_struct & initialize it.
@@ -167,6 +169,7 @@ check_vmm(void) {
     check_vma_struct();
     check_pgfault();
 
+    assert(nr_free_pages_store == nr_free_pages());
     cprintf("check_vmm() succeeded.\n");
 }
 
@@ -226,6 +229,8 @@ check_vma_struct(void) {
     }
 
     mm_destroy(mm);
+
+    assert(nr_free_pages_store == nr_free_pages());
 
     cprintf("check_vma_struct() succeeded!\n");
 }
@@ -361,6 +366,19 @@ do_pgfault(struct mm_struct *mm, uint32_t error_code, uintptr_t addr) {
     *   mm->pgdir : the PDT of these vma
     *
     */
+    pde_t *pgdir = get_pte(mm->pgdir, addr, 1);
+    if (pgdir == NULL)//not find pte and not creat
+        goto failed;
+    if(*pgdir==0){
+    struct Page *pte_page = pgdir_alloc_page(mm->pgdir, addr, perm);
+    }
+    else{
+        struct Page *page;
+        swap_in(mm, addr, &page);
+        page_insert(mm->pgdir, page, addr, perm);
+        swap_map_swappable(mm, addr, page, 1);
+        page->pra_vaddr = addr;
+    }
 #if 0
     /*LAB3 EXERCISE 1: YOUR CODE*/
     ptep = ???              //(1) try to find a pte, if pte's PT(Page Table) isn't existed, then create a PT.
