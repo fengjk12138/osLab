@@ -51,6 +51,8 @@ kern_init(void) {
     //lab1_switch_test();
     
     cpu_idle();                 // run idle process
+    /* do nothing */
+    while (1);
 }
 
 void __attribute__((noinline))

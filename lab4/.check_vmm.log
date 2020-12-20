@@ -1,0 +1,30 @@
+c[?7l[2J[0mSeaBIOS (version 1.13.0-1ubuntu1)
+
+
+iPXE (http://ipxe.org) 00:03.0 CA00 PCI2.10 PnP PMM+07F8CA10+07ECCA10 CA00
+Press Ctrl-B to configure iPXE (PCI 00:03.0)...                                                                               
+
+
+Booting from Hard Disk..(THU.CST) os is loading ...
+
+Special kernel symbols:
+  entry  0xc0100036 (phys)
+  etext  0xc0109d9f (phys)
+  edata  0xc012a000 (phys)
+  end    0xc012d1c4 (phys)
+Kernel executable memory footprint: 181KB
+ebp:0xc0126f38 eip:0xc0100b0c args: 0x00010094 0x00010094 0xc0126f68 0xc01000e3
+    kern/debug/kdebug.c:309: print_stackframe+23
+ebp:0xc0126f48 eip:0xc0126f68 args: 0x00000000 0x00000000 0x00000000 0xc0126fb8
+    <unknow>: -- 0xc0126f64 --
+ebp:0xc0126f68 eip:0x00000000 args: 0x00000000 0xc0126f90 0xffff0000 0xc0126f94
+    <unknow>: -- 0xfffffffc --
+ebp:0xc0126f88 eip:0xffff0000 args: 0x00000000 0xffff0000 0xc0126fb4 0x0000002a
+    <unknow>: -- 0xfffefffc --
+ebp:0xc0126fa8 eip:0xc0126fb4 args: 0x00000000 0xc0100036 0xffff0000 0x0000001d
+    <unknow>: -- 0xc0126fb0 --
+ebp:0xc0126fc8 eip:0xffff0000 args: 0xc0109dbc 0xc0109da0 0x000031c4 0x00000000
+    <unknow>: -- 0xfffefffc --
+ebp:0xc0126ff8 eip:0x000031c4 args: 0xc0109fb0 0xc0109fb8 0xc0100d91 0xc0109fd7
+    <unknow>: -- 0x000031c0 --
+ebp:0x00000000 eip:0xc0100d91 

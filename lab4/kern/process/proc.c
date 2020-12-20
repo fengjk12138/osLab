@@ -102,14 +102,14 @@ alloc_proc(void) {
      *       uint32_t flags;                             // Process flag
      *       char name[PROC_NAME_LEN + 1];               // Process name
      */
-        proc->state = PROC_UNINIT;
-        proc->pid = -1;             //未初始pid=-1
+        proc->state = PROC_UNINIT;  
+        proc->pid = -1;             //未初始化的的进程id为-1
         proc->runs = 0;             
-        proc->kstack = 0;           
-        proc->need_resched = 0;     
+        proc->kstack = 0;           //内存栈的地址
+        proc->need_resched = 0;     //不需要调度
         proc->parent = NULL;        
         proc->mm = NULL;            
-        memset(&(proc->context), 0, sizeof(struct context));
+        memset(&(proc->context), 0, sizeof(struct context));//上下文的初始化
         proc->tf = NULL;            
         proc->cr3 = boot_cr3;       //页目录设为内核页目录表的基址
         proc->flags = 0;            
@@ -312,20 +312,23 @@ do_fork(uint32_t clone_flags, uintptr_t stack, struct trapframe *tf) {
         goto fork_out;
     }
     proc->parent = current;
+    //为进程分配一个内核栈
     if (setup_kstack(proc) != 0) {
         goto bad_fork_cleanup_proc;
     }
     if (copy_mm(clone_flags, proc) != 0) {
         goto bad_fork_cleanup_kstack;
     }
+    //复制父进程的中断帧和上下文信息
     copy_thread(proc, stack, tf);
+    //添加到进程的hash列表中
     bool intr_flag;
     local_intr_save(intr_flag);
     {
         proc->pid = get_pid();
         hash_proc(proc); 
-        nr_process++;
-        list_add(&proc_list, &(proc->list_link));//将进程加入到进程的链表中
+        nr_process ++; 
+        list_add(&proc_list, &(proc->list_link));//加入到进程的链表中
     }
     local_intr_restore(intr_flag);
     wakeup_proc(proc);

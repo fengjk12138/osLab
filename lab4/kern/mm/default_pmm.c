@@ -135,13 +135,12 @@ default_alloc_pages(size_t n) {
         }
     }
     if (page != NULL) {
-        list_del(&(page->page_link));
         if (page->property > n) {
             struct Page *p = page + n;
             p->property = page->property - n;
-            list_add(&free_list, &(p->page_link));
+            list_add(le, &(p->page_link));
     }
-        list_del(&(page->page_link));//mychange
+        list_del(&(page->page_link));
         nr_free -= n;
         ClearPageProperty(page);
     }
@@ -179,7 +178,7 @@ default_free_pages(struct Page *base, size_t n) {
         }
     }
     nr_free += n;
-    list_add(&free_list, &(base->page_link));
+    list_add(sit, &(base->page_link));
 }
 
 static size_t
@@ -296,7 +295,6 @@ default_check(void) {
 
     le = &free_list;
     while ((le = list_next(le)) != &free_list) {
-        assert(le->next->prev == le && le->prev->next == le);
         struct Page *p = le2page(le, page_link);
         count --, total -= p->property;
     }

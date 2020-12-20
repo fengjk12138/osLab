@@ -363,7 +363,7 @@ get_pte(pde_t *pgdir, uintptr_t la, bool create) {
      *   PTE_W           0x002                   // page table/directory entry flags bit : Writeable
      *   PTE_U           0x004                   // page table/directory entry flags bit : User can access
      */
-    pde_t *pdep = PDX(la) + pgdir;
+     pde_t *pdep = PDX(la) + pgdir;
     if(!(*pdep & PTE_P))
     {
         if(create)
@@ -647,6 +647,7 @@ get_pgtable_items(size_t left, size_t right, size_t start, uintptr_t *table, siz
     }
     return 0;
 }
+
 //print_pgdir - print the PDT&PT
 void
 print_pgdir(void) {

@@ -168,6 +168,7 @@ check_vmm(void) {
     check_pgfault();
 
     //assert(nr_free_pages_store == nr_free_pages());
+
     cprintf("check_vmm() succeeded.\n");
 }
 
@@ -181,13 +182,13 @@ check_vma_struct(void) {
     int step1 = 10, step2 = step1 * 10;
 
     int i;
-    for (i = step1; i >= 1; i --) {
+    for (i = step1; i >= 1; i--) {
         struct vma_struct *vma = vma_create(i * 5, i * 5 + 2, 0);
         assert(vma != NULL);
         insert_vma_struct(mm, vma);
     }
 
-    for (i = step1 + 1; i <= step2; i ++) {
+    for (i = step1 + 1; i <= step2; i++) {
         struct vma_struct *vma = vma_create(i * 5, i * 5 + 2, 0);
         assert(vma != NULL);
         insert_vma_struct(mm, vma);
@@ -195,14 +196,14 @@ check_vma_struct(void) {
 
     list_entry_t *le = list_next(&(mm->mmap_list));
 
-    for (i = 1; i <= step2; i ++) {
+    for (i = 1; i <= step2; i++) {
         assert(le != &(mm->mmap_list));
         struct vma_struct *mmap = le2vma(le, list_link);
         assert(mmap->vm_start == i * 5 && mmap->vm_end == i * 5 + 2);
         le = list_next(le);
     }
 
-    for (i = 5; i <= 5 * step2; i +=5) {
+    for (i = 5; i <= 5 * step2; i += 5) {
         struct vma_struct *vma1 = find_vma(mm, i);
         assert(vma1 != NULL);
         struct vma_struct *vma2 = find_vma(mm, i+1);
@@ -409,8 +410,8 @@ do_pgfault(struct mm_struct *mm, uint32_t error_code, uintptr_t addr) {
         }
    }
 #endif
-   ret = 0;
-failed:
+    ret = 0;
+    failed:
     return ret;
 }
 
